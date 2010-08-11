@@ -1,0 +1,127 @@
+/* psx4symbian
+ *
+ * Copyright (C) 2010 Summeli <summeli@summeli.fi>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
+
+
+TARGET			psx4symb.lib
+TARGETTYPE 		LIB
+
+EPOCHEAPSIZE 6000000 64000000
+EPOCSTACKSIZE 80000
+
+//OPTION GCCE -march=armv5t -O0
+
+//OPTION GCCE -march=armv5t -O0 -fexpensive-optimizations -finline -finline-function -ffast-math -msoft-float -falign-functions=32 -falign-loops -falign-labels -falign-jumps -fomit-frame-pointer
+
+OPTION CW -wchar_t on
+MACRO  _WCHAR_T_DECLARED
+
+
+SOURCEPATH		..\..\
+
+MACRO ARM_ARCH
+MACRO DYNAREC
+MACRO STD_PSXREC
+MACRO WITH_HLE
+MACRO USE_OLD_COUNTERS
+MACRO MITSHM 
+MACRO UNZIP_SUPPORT 
+MACRO ZLIB 
+MACRO HAVE_MKSTEMP 
+MACRO HAVE_STRING_H  // MACRO HAVE_STRINGS_H  in iphone
+
+//Symbian Stuff
+//compiled in Qt side
+//SOURCE			symbian\psx4symbian_sdl.cpp
+//SOURCE 			symbian\minimal.cpp
+SOURCE			symbian\glue\symbian_memoryhandler.cpp
+
+SOURCE			main.cpp
+SOURCE			cdrom.cpp
+SOURCE			decode_xa.cpp
+SOURCE			mdec.cpp
+SOURCE			misc.cpp
+SOURCE			bios.cpp
+SOURCE			dma.cpp
+SOURCE			hle.cpp
+SOURCE			hw.cpp
+SOURCE			components.cpp
+SOURCE			pad.cpp
+SOURCE			sio.cpp
+SOURCE			spu.cpp
+
+SOURCE			cdr\oldversion\cdriso.cpp
+
+//NEWSPU
+SOURCE 			franspu\spu_callback.cpp
+SOURCE			franspu\spu_dma.cpp
+SOURCE			franspu\spu_registers.cpp
+SOURCE			franspu\spu_output_symbian.cpp
+//STD_PSXREC
+SOURCE 			interpreter\interpreter.cpp
+SOURCE 			recompiler3\arm\recompiler.cpp 
+SOURCE			r3000a_new.cpp
+SOURCE			counters_new.cpp
+SOURCE			gte_pcsx.cpp
+SOURCE			gte_mame.cpp
+SOURCE			mem.cpp
+SOURCE			recompiler3\arm\disasm.cpp 
+SOURCE			recompiler3\arm\mips_disasm.cpp 
+
+//GPU
+SOURCE			gpuAPI\gpuAPI.cpp  	      
+SOURCE          gpuAPI\newGPU\newGPU.cpp
+SOURCE          gpuAPI\newGPU\fixed.cpp
+SOURCE          gpuAPI\newGPU\core_Command.cpp
+SOURCE          gpuAPI\newGPU\core_Dma.cpp
+SOURCE          gpuAPI\newGPU\core_Draw.cpp
+SOURCE          gpuAPI\newGPU\core_Misc.cpp
+SOURCE          gpuAPI\newGPU\raster_Sprite.cpp
+SOURCE          gpuAPI\newGPU\raster_Poly.cpp
+SOURCE          gpuAPI\newGPU\raster_Line.cpp
+SOURCE          gpuAPI\newGPU\raster_Image.cpp
+SOURCE          gpuAPI\newGPU\inner.cpp
+
+//Memory Relocator for Symbian
+SOURCE			symbian\relocator\relocator.cpp
+SOURCE			symbian\relocator\relocator_glue.S
+USERINCLUDE		..\relocator
+
+//USERINCLUDES
+USERINCLUDE	    ..\..\Qt\psx4cute
+USERINCLUDE		..\glue
+USERINCLUDE		..\..\recompiler3\arm
+USERINCLUDE		..\..\gpuAPI\newGPU
+USERINCLUDE		..\..\gpuAPI
+USERINCLUDE	 	..\..\franspu
+USERINCLUDE     ..\..
+
+
+SYSTEMINCLUDE	 \epoc32\include
+SYSTEMINCLUDE	 \epoc32\include\libc
+SYSTEMINCLUDE	 \epoc32\include\stdapis\stlport
+SYSTEMINCLUDE	 \epoc32\include\stdapis\glib-2.0\glib
+
+//SYSTEMINCLUDE	 \epoc32\include\stdapis
+//SYSTEMINCLUDE	 \epoc32\include\stdapis\sys
+
+
+#ifdef ENABLE_ABIV2_MODE
+DEBUGGABLE_UDEBONLY
+#endif
+// End of File

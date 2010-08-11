@@ -51,6 +51,8 @@ void gpuDrawS(void)
 	xmin = DrawingArea[0];	xmax = DrawingArea[2];
 	ymin = DrawingArea[1];	ymax = DrawingArea[3];
 
+	//TODO: Symbian minmax
+	
   int rx0 = Max2(xmin,Min2(x0,x1));
   int ry0 = Max2(ymin,Min2(y0,y1));
   int rx1 = Min2(xmax,Max2(x0,x1));

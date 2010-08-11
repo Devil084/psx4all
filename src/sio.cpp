@@ -276,7 +276,7 @@ void SaveMcd(char *mcd, char *data, unsigned long adr, int size) {
 			fseek(f, adr, SEEK_SET);
 
 		fwrite(data + adr, 1, size, f);
-#if defined(ARM_ARCH) && !defined(GIZMONDO)
+#if defined(ARM_ARCH) && !defined(GIZMONDO) && !defined(__SYMBIAN32__) //TODO: check this
 		sync();
 		sync();
 #endif

@@ -364,6 +364,11 @@ typedef struct {
 
 #define ARM_BX_COND(p, cond, reg) ARM_EMIT(p, (0x012FFF10 | (reg) | ((cond) << ARMCOND_SHIFT)) )
 
+
+/* branch to register with link */
+#define ARM_BLX_COND(p, cond, reg) ARM_EMIT(p, ((cond << ARMCOND_SHIFT) | (reg) | 0x12FFF30))
+#define ARM_BLX(p, reg) ARM_BLX_COND((p), ARMCOND_AL, (reg))
+
 /* Data Processing Instructions - there are 3 types. */
 
 typedef struct {

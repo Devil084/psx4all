@@ -5,7 +5,11 @@ psxRegisters* 	psxRegs;
 RecRegisters 	regcache;
 
 u32 psxRecLUT[0x010000];
+#ifdef __SYMBIAN32__
+u8* recMemBase = NULL;
+#else
 u8 recMemBase[RECMEM_SIZE];
+#endif
 u32 *recMem;					/* the recompiled blocks will be here */
 s8 recRAM[0x200000];				/* and the ptr to the blocks here */
 s8 recROM[0x080000];				/* and here */

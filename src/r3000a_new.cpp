@@ -170,7 +170,7 @@ void update_hw(u32 cycles)
 		psxCounters.base_count=0;
 
 		GPU_vSinc();
-#ifndef IPHONE
+#if !defined(IPHONE) && !defined( __SYMBIAN32__ )
 		SPU_async(Config.PsxType);
 #endif
 		psxHu32ref(0x1070)|= SWAPu32(1);

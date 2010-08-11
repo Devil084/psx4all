@@ -15,7 +15,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <fcntl.h>
-#if !defined(IPHONE) && !defined(GIZMONDO)
+#if !defined(IPHONE) && !defined(GIZMONDO) && !defined(__SYMBIAN32__)
 #include <sys/soundcard.h>
 #endif
 #endif

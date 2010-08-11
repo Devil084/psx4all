@@ -31,7 +31,11 @@ extern psxRegisters* 	psxRegs;
 extern RecRegisters 	regcache;
 
 extern u32 psxRecLUT[0x010000];
+#ifdef __SYMBIAN32__
+extern u8* recMemBase;
+#else
 extern u8 recMemBase[RECMEM_SIZE];
+#endif
 extern s8 recRAM[0x200000];				/* and the ptr to the blocks here */
 extern s8 recROM[0x080000];				/* and here */
 extern u32 pc;						/* recompiler pc */

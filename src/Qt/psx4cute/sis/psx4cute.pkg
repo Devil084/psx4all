@@ -1,0 +1,30 @@
+; Language
+&EN
+
+
+; SIS header: name, uid, version
+#{"psx4cute"},(0xE048D429),1,0,0
+
+; Localised Vendor name
+%{"Vendor"}
+
+; Unique Vendor name
+:"Vendor"
+
+
+; Manual PKG pre-rules from PRO files
+; Default dependency to Qt libraries
+(0x2001E61C), 4, 6, 3, {"Qt"}
+; Default HW/platform dependencies
+[0x101F7961],0,0,0,{"S60ProductID"}
+[0x102032BE],0,0,0,{"S60ProductID"}
+[0x102752AE],0,0,0,{"S60ProductID"}
+[0x1028315F],0,0,0,{"S60ProductID"}
+ 
+
+; Executable and default resource files
+"/S60/devices/S60_5th_Edition_SDK_v1.0/epoc32/release/GCCE/UREL/psx4cute.exe"    - "!:\sys\bin\psx4cute.exe"
+"/S60/devices/S60_5th_Edition_SDK_v1.0/epoc32/data/z/resource/apps/psx4cute.rsc"    - "!:\resource\apps\psx4cute.rsc"
+"/S60/devices/S60_5th_Edition_SDK_v1.0/epoc32/data/z/private/10003a3f/import/apps/psx4cute_reg.rsc"    - "!:\private\10003a3f\import\apps\psx4cute_reg.rsc"
+
+; Manual PKG post-rules from PRO files

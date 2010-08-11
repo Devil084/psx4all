@@ -14,16 +14,14 @@
 #endif
 
 
+#ifdef __SYMBIAN32__
+#include "symbian_memoryhandler.h"
+#include "symb_adaptation.h"
+extern struct app_Preferences preferences;
+#endif
 #if defined(ARM_ARCH)
 #include <fcntl.h>
 #include <sys/ioctl.h>
-
-#if !defined(GIZMONDO) && !defined(POCKETPC) && !defined(IPHONE)
-  #include <sys/mman.h>
-  #include <sys/soundcard.h>
-  #include <linux/fb.h>
-  #include <dlfcn.h>
-#endif
 
 #include <pthread.h>
 #include <signal.h>
@@ -70,7 +68,7 @@ extern bool activeNullGPU;
 extern int  skipCount;
 extern int  skipRate;
 static int  skipValue = 0;
-#ifdef IPHONE
+#if defined(IPHONE) || defined(__SYMBIAN32__)
 static int  skipCountTablePhone[4] 	= { 0,2,3,4 };
 static int  skipRateTablePhone[4] 	= { 1,3,4,5 };
 #endif
@@ -357,7 +355,8 @@ char *FileReq(char *dir, char *ext)
 			{
         		gp2x_printf(NULL, 80, MENU_LS+(10*row), "DIR ");
 			}
-			snprintf(tmp_string, 30, "%s", filereq_dir_items[row+first_visible].name);
+			//TODO: safeprint
+			//snprintf(tmp_string, 30, "%s", filereq_dir_items[row+first_visible].name);
 			gp2x_printf(NULL, 80+(10*6), MENU_LS+(10*row), tmp_string);
 			row++;
 		}
@@ -921,7 +920,7 @@ s32 SelectGame()
 				case 0:
 					if( keys & GP2X_B )
 					{
-#ifndef IPHONE
+#if !defined(IPHONE) && !defined(__SYMBIAN32__)
 						if( 1 == psx4all_emulating )
 						{
 							s32 ret;
@@ -950,7 +949,7 @@ s32 SelectGame()
 				case 1:
 					if( keys & GP2X_B )
 					{
-#ifndef IPHONE
+#if !defined(IPHONE) && !defined(__SYMBIAN32__)
 						// pause so keys won't be accidently inputted in FileReq
 						gp2x_timer_delay(2000);
 						newpackfile = FileReq(NULL, ".svs");
@@ -960,7 +959,7 @@ s32 SelectGame()
 				case 2:
 					if( keys & GP2X_B )
 					{
-#ifndef IPHONE
+#if !defined(IPHONE) && !defined(__SYMBIAN32__)
 						Config.HLE = 0;
 						// pause so keys won't be accidently inputted in FileReq
 						gp2x_timer_delay(2000);
@@ -971,7 +970,7 @@ s32 SelectGame()
 				case 3:
 					if( keys & GP2X_B )
 					{
-#ifndef IPHONE
+#if !defined(IPHONE) && !defined(__SYMBIAN32__)
 						Config.HLE = 1;
 						// pause so keys won't be accidently inputted in FileReq
 						gp2x_timer_delay(2000);
@@ -1097,12 +1096,20 @@ s32 SelectGame()
 
 #if defined(IPHONE)
 extern "C" int iphone_main(char* filename)
+#elif defined(__SYMBIAN32__)
+int symb_main( char* rom, char* bios, char* gamedir )
 #else
 int main(int argc, char *argv[])
 #endif
 {
+#ifdef __SYMBIAN32__
+   // char* filename = "e:\\gba\\tekken2.bin";
+	char* filename = rom;
+    create_all_translation_caches();
+    setDefaultPreferences();
+#endif
 
-#ifndef IPHONE
+#if !defined(IPHONE) && !defined(__SYMBIAN32__)
 #if defined(ARM_ARCH)
 	ChangeWorkingDirectory(argv[0]);
 	getcwd(gamepath, 256);
@@ -1122,10 +1129,13 @@ int main(int argc, char *argv[])
 	sprintf(gamepath,"");
 #endif
 
-#ifdef IPHONE
-	sprintf(gamepath,"");
+#if defined(IPHONE)
+	sprintf(gamepath,"e:\\gba\\");
 #endif
 
+#if defined(__SYMBIAN32__)
+	sprintf(gamepath, gamedir);
+#endif
 	// Configure the emulator. Hardcoded for now.
 	memset(&Config, 0, sizeof(PsxConfig));
 	Config.PsxAuto = 1;
@@ -1161,9 +1171,9 @@ int main(int argc, char *argv[])
 	sprintf(Config.Mcd2, "mcd002.mcr");
 #else
 	sprintf(Config.BiosDir, "%s", gamepath);
-	sprintf(Config.Bios, "/scph1001.bin");
-	sprintf(Config.Mcd1, "%s/mcd001.mcr", gamepath);
-	sprintf(Config.Mcd2, "%s/mcd002.mcr", gamepath);
+	sprintf(Config.Bios, "scph1001.bin");
+	sprintf(Config.Mcd1, "%smcd001.mcr", gamepath);
+	sprintf(Config.Mcd2, "%smcd002.mcr", gamepath);
 
 #endif
 	gp2x_init(1000, 16, 11025, 16, 1, 60, 1);
@@ -1171,7 +1181,7 @@ int main(int argc, char *argv[])
 	gp2x_video_flip_single();
 #endif
 
-#ifdef IPHONE
+#if defined(IPHONE) || defined(__SYMBIAN32__)
 	u32 loadsvs = 0;
 	linesInterlace_user = preferences.interlace;
 	skipCount = skipCountTablePhone[preferences.frameSkip];
@@ -1249,7 +1259,7 @@ int main(int argc, char *argv[])
 			CloseComponents();
 			
 			gp2x_deinit();
-			pthread_exit(NULL);
+			//pthread_exit(NULL); //TODO: pthread_exit is still missing!
 		}
 	}
 

@@ -4,7 +4,7 @@
 
 //#define WITH_DISASM
 
-#ifdef IPHONE
+#if defined(IPHONE) || defined(__SYMBIAN32__) 
 
 #define SAVED_ALL_REGS		((1U << ARMREG_R4) | (1U << ARMREG_R5) |			\
 							(1U << ARMREG_R6) | (1U << ARMREG_R7) |				\
@@ -65,18 +65,35 @@
 #define CalcDispCP2C(rx) (520 + ((rx) << 2))
 
 /* call func */
+#ifdef __SYMBIAN32__
+#define CALLFunc(func)\
+	{																															\
+	LoadImmediate32( func, ARMREG_R9 ); \
+	ARM_BLX( ARM_POINTER, ARMREG_R9 );   \
+	}
+#else
 #define CALLFunc(func)						 															\
 	{																															\
 		ARM_BL(ARM_POINTER, arm_relative_offset(recMem, func, 8));	\
 	}
-
+#endif
+		
 #define CALLFunc_NoFlush(func)		 											\
 	CALLFunc(func)						 										\
 
+#ifdef __SYMBIAN32__
+#define CALLFunc_Branch(func)		 											\
+	{																															\
+	LoadImmediate32( func, ARMREG_R9 ); \
+	ARM_BLX( ARM_POINTER, ARMREG_R9 );   \
+	rec_recompile_end(ARMCOND_AL); \
+	}
+#else
 #define CALLFunc_Branch(func)		 											\
 	ARM_BL(ARM_POINTER, arm_relative_offset(recMem, func, 8));					\
-	rec_recompile_end(ARMCOND_AL);												\
-
+	rec_recompile_end(ARMCOND_AL);												
+#endif
+	
 #ifdef GIZMONDO
 #define gp2x_sync() sync()
 #else
@@ -94,12 +111,11 @@
   ((((u32)(offset) - ((u32)(source) + (next))) >> 2) & 0xFFFFFF)				\
 
 #else
-
 #define arm_relative_offset(source, offset, next) 								\
-  arm_patch_relative_offset(((u32)source), ((u32)offset))						\
+  SymbianRelativeOffset(((u32)source), ((u32)offset))						\
 
 // Made into a function to avoid a compiler bug in Toolchain 0.30
-u32 arm_patch_relative_offset(u32 source, u32 offset)
+INLINE u32 arm_patch_relative_offset(u32 source, u32 offset)
 {
 	u32 new_source = source + 8;
 	u32 final_offset = ((offset - new_source) / 4) & 0xFFFFFF;

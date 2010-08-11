@@ -1,0 +1,1 @@
+call createsis create -cert sis\psx4all.cer -key sis\psx4allkey psx4cute_gcce.pkg

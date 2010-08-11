@@ -32,7 +32,19 @@ INLINE  fixed xMulx     (const fixed _a, const fixed _b)                  { retu
 INLINE  fixed xDivx     (const fixed _a, const fixed _b)                  { return  (fixed)( (s64)((s64)(_a)<<FIXED_BITS)/_b );  }
 INLINE  fixed xMulxMulx (const fixed _a, const fixed _b, const fixed _c)  { return  xMulx(xMulx(_a,_b),_c); }
 
-INLINE  int   Log2(int _a);
+inline int Log2(int _a)
+{
+  const unsigned int b[] = {0x2, 0xC, 0xF0, 0xFF00, 0xFFFF0000};
+  const unsigned int S[] = {1, 2, 4, 8, 16};
+  unsigned int c = 0; // result of log2(v) will go here
+  if (_a & b[4]) { _a >>= S[4]; c |= S[4];  }
+  if (_a & b[3]) { _a >>= S[3]; c |= S[3];  }
+  if (_a & b[2]) { _a >>= S[2]; c |= S[2];  }
+  if (_a & b[1]) { _a >>= S[1]; c |= S[1];  }
+  if (_a & b[0]) { _a >>= S[0]; c |= S[0];  }
+  return c;
+}
+
 INLINE  void  xHiInv    (const fixed _b, s32& iFactor_, s32& iShift_)
 {
   u32 uD = (_b<0) ? -_b : _b;
@@ -117,7 +129,8 @@ INLINE  fixed xSqrt(fixed _uVal)
 */
 
 ///////////////////////////////////////////////////////////////////////////
-INLINE int Log2(int _a)
+/*
+inline int Log2(int _a)
 {
   const unsigned int b[] = {0x2, 0xC, 0xF0, 0xFF00, 0xFFFF0000};
   const unsigned int S[] = {1, 2, 4, 8, 16};
@@ -129,8 +142,23 @@ INLINE int Log2(int _a)
   if (_a & b[0]) { _a >>= S[0]; c |= S[0];  }
   return c;
 }
-
+*/
 ///////////////////////////////////////////////////////////////////////////
+
+inline u32 Min2(u32 _a,u32 _b)
+     {return(_a<_b ? _a : _b);}
+
+inline u32 Min3 (const u32 _a, const u32 _b, const u32 _c) 
+    { return  Min2(Min2(_a,_b),_c); }
+
+
+inline u32 Max2(u32 _a,u32 _b)
+     { return  (_a>_b)?_a:_b; }
+
+inline u32 Max3 (const u32 _a, const u32 _b, const u32 _c) 
+    {  return  Max2(Max2(_a,_b),_c); }
+
+/*
 template<typename T>
 INLINE  T Min2 (const T _a, const T _b)             { return (_a<_b)?_a:_b; }
 
@@ -143,6 +171,6 @@ INLINE  T Max2 (const T _a, const T _b)             { return  (_a>_b)?_a:_b; }
 
 template<typename T>
 INLINE  T Max3 (const T _a, const T _b, const T _c) { return  Max2(Max2(_a,_b),_c); }
-
+*/
 ///////////////////////////////////////////////////////////////////////////
 #endif  //FIXED_H

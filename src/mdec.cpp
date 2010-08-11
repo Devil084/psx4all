@@ -32,7 +32,7 @@
 #define MDEC_STP	0x00800000
 
 
-#if !defined(DREAMCAST) && !defined(IPHONE)
+#if !defined(DREAMCAST) && !defined(IPHONE) 
   #define FIXED
 #endif
 

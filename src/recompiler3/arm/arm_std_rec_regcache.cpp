@@ -212,7 +212,7 @@ static INLINE void regReset()
 	regcache.arm[3].arm_type = REG_RESERVED;
 	regcache.arm[TEMP_1].arm_type = REG_RESERVED;
 	regcache.arm[TEMP_2].arm_type = REG_RESERVED;
-#ifdef IPHONE
+#if defined(IPHONE) || defined( __SYMBIAN32__)
 	regcache.arm[9].arm_type = REG_RESERVED;
 #endif
 	regcache.arm[PERM_REG_1].arm_type = REG_RESERVED;
